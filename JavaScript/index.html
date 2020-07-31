@@ -5,9 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="throttleTry">防抖点击</div>
+    <div class="throttleTry" style="height:150px;line-height:150px;text-align:center; color: #fff;background-color:#ccc;font-size:80px;"></div>
+    <div class="draggable">拖拽</div>
 </body>
 <script src="./UtilFunc.js"></script>
+<script>
+
+    //防抖节流
+    let num =1;
+    var throttleAndDebounce = document.querySelector(".throttleTry");
+    function handler() {
+        throttleAndDebounce.innerHTML = num++;
+    }
+    EventUtil.addHandler(throttleAndDebounce,"mousemove",throttle1(handler,1000,2));
+    //拖拽
+    var draggableDiv = document.querySelector(".draggable");
+    var l = 0;
+    var r = 0;
+    var x = 0;
+    var y = 0;
+    var flag = false;
+    EventUtil.addHandler(draggableDiv,"mousedown",(e)=>{
+        flag=true
+        x=e.clientX;
+        y=e.clientY;
+        l=draggableDiv.offsetLeft;
+        r=draggableDiv.offsetTop;
+        draggableDiv.style.cursor="move";
+    })
+    EventUtil.addHandler(window,"mousemove",(e)=>{
+        var mx = e.clientX;
+        var my = e.clientY;
+        if(!flag){
+            return;
+        }
+        draggableDiv.style.left = mx-(x-l) + 'px';
+        draggableDiv.style.top = my-(y-r) + 'px';
+    })
+    EventUtil.addHandler(window,"mouseup",(e)=>{
+        flag = false;
+        draggableDiv.style.cursor = 'default';
+    })
+</script>
 </html>

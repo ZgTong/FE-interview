@@ -1,35 +1,94 @@
-var CookieUtil = {
-    get:function(name){
-        var cookieName = encodeURIComponent(name)+"=";
-            cookieStart = document.cookie.indexOf(cookieName);
-            cookieValue = null;
-        if(cookieStart>-1){
-            var cookieEnd = document.cookie.indexOf(";",cookieStart);
-            if(cookieEnd==-1){
-                cookieEnd=document.cookie.length;
-            }
-            cookieValue = decodeURIComponent(document.cookie.substring(cookieStart+cookieName.length,cookieEnd));
-        }
-        return cookieValue
-    },
+const p1 = new Promise(function (resolve, reject) {
+    setTimeout(() => reject(new Error('fuck有')), 3000)
+  })
+  
+const p2 = new Promise(function (resolve, reject) {
+    setTimeout(() => resolve(p1), 1000)
+})
 
-    set:function(name,value,expires,path,domain,secure){
-        var cookieText = encodeURIComponent(name)+"="+encodeURIComponent(value);
-        if(expires instanceof Date){
-            cookieText+=";expires="+expires.toGMTString();
-        }
-        if(path){
-            cookieText+=";path="+path;
-        }
-        if(domain){
-            cookieText+=";domain="+domain;
-        }
-        if(secure){
-            cookieText+=";secure";
-        }
-        document.cookie=cookieText;
-    },
-    unset:function(name,path,domain,secure){
-        this.set(name,"",new Date(0),path,domain,secure);
-    }
+p2
+.then(result => console.log(result))
+.catch(error => console.log(error))
+
+//红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promise实现）三个亮灯函数已经存在：
+function red(){console.log("red")};
+function yellow(){console.log("yellow")};
+function green(){console.log("green")};
+var light = function (timer,fn) {
+    return new Promise((resolve,reject)=>{
+        setTimeout(function () {
+            fn();
+            resolve();
+        },timer)
+    })
 }
+
+var step = function () {
+    Promise.resolve().then(function () {
+        return light(3000,red)
+    }).then(function () {
+        return light(2000, green);
+    }).then(function () {
+        return light(1000, yellow);
+    }).then(function () {
+        step();
+    });
+}
+
+step();
+
+//reduce 函数
+//计算数组中每个元素出现的次数
+let names = ['Alice', 'Bob', 'Tiff', 'Bruce', 'Alice'];
+let nameNums = names.reduce((pre,cur,idx,arr)=>{
+    if (cur in pre) {
+        pre[cur]++;
+    } else {
+        pre[cur]=1;
+    }
+    return pre;
+},{})
+
+console.log(nameNums)
+var p = new Promise((resolve, reject) => {
+    reject(Error('The Fails!'))
+  })
+  .catch(error => console.log(error.message))
+  .catch(error => console.log(error.message))
+
+
+  var p = new Promise((resolve, reject) => {
+    reject(Error('The Fails!'))
+  })
+  .catch(error => console.log(error))
+  .then(error => console.log(error))
+
+
+  Promise.resolve('Success!')
+  .then(() => {
+    throw Error('Oh noes!')
+  })
+  .catch(error => {
+    return 'actually, that worked'
+  })
+  .then(data => {
+    throw Error('The fails!')
+  })
+  .catch(error => console.log(error.message))
+
+const tasks= [];
+const output = (i)=>new Promise((resolve)=>{
+    setTimeout(() => {
+        console.log(i);
+        resolve();
+    }, 1000*i);
+})
+
+for (var j = 0; j < 5; j++) {
+    tasks.push(output(j));
+}
+Promise.all(tasks).then(()=>{
+    setTimeout(() => {
+        console.log(j)
+    }, 1000);
+})

@@ -7,12 +7,11 @@ var obj = {
 //手动实现call方法
 Function.prototype.call_myself= function(obj){
     obj = obj ? Object(obj):window;
-    var args = [];
     // for (let i = 1; i < arguments.length; i++) {
     //     args.push("arguments["+i+"]");
     // }
     //ES6
-    args = [...arguments].slice(1);
+    var args = [...arguments].slice(1);
     obj.fn = this;
     // var result = eval("obj.fn("+args+")");
     //ES6
@@ -40,11 +39,16 @@ fuck.apply_myself(obj,["my ","name ","is "]);
 //手动实现bind方法
 
 Function.prototype.bind_myself = function (obj) {
+    if (typeof this !=="function") {
+        throw new Error("what is trying to be bound is not callable");
+    }
     var fn = this;
     var args = Array.prototype.slice.call(arguments,1);
-    return function (...newArgs) {
-        fn.apply_myself(obj,args.concat(...newArgs));
+    var bound = function (...newArgs) {
+        fn.apply_myself(this.constructor ===fn?this:obj ,args.concat(...newArgs));
     }
+    bound.prototype = fn.prototype;
+    return bound;
 }
 let newfuck = fuck.bind_myself(obj,1);
 newfuck(2,3);

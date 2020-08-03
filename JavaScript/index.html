@@ -20,7 +20,7 @@
     function handler() {
         throttleAndDebounce.innerHTML = num++;
     }
-    EventUtil.addHandler(throttleAndDebounce,"mousemove",throttle1(handler,1000,2));
+    EventUtil.addHandler(throttleAndDebounce,"mousemove",throttle(handler,1000,2));
     //拖拽
     var draggableDiv = document.querySelector(".draggable");
     var l = 0;

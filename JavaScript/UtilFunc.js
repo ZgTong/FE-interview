@@ -2,6 +2,11 @@
  * 
  * 针对cookie操作的公共方法
  */
+// str = "name=tzg;age=19";
+// console.log(str.indexOf("name="));
+// console.log(str.indexOf(";",0));
+
+
 var CookieUtil = {
     get:function(name){
         var cookieName = encodeURIComponent(name)+"=";
@@ -80,15 +85,16 @@ var EventUtil = {
  * 函数柯里化
  * @param {*} fn 要柯里化的函数
  */
-function curry(fn,args){
+function curry(fn){
     var length = fn.length; //3
-    var args =args||[];//[]
-    console.log(args)
+    var args =Array.prototype.slice.call(arguments,1)||[];//[]
+    // console.log("curry:"+args)
     return function(){
         var innerArgs = Array.prototype.slice.call(arguments);
         var newArgs = args.concat(innerArgs);
+        // console.log("innerArgs:"+newArgs);
         if (newArgs.length<length) {
-            return curry.call(this,fn,newArgs);
+            return curry.call(this,fn,...newArgs);
         } else {
             return fn.apply(this,newArgs);
         }
@@ -102,8 +108,8 @@ function add(num1,num2,num3){
     return num1+num2+num3;
 }
 
-var curriedAdd = curry(add);
-console.log(curriedAdd(5,4)(3));
+var curriedAdd = curry(add,4);
+console.log(curriedAdd(3,2));
 
 
 /**
@@ -120,6 +126,7 @@ function throttle(func,time,type){
     return function(){
         let context = this;
         let args = arguments;
+        console.log(args);
         if (type===1) {
             let now = Date.now();
             if (now-pre>time) {
@@ -141,33 +148,6 @@ function throttle(func,time,type){
     }
 }
 
-function throttle1(func,time,type) {
-    if (type===1) {
-        var pre = 0;
-    }else if (type===2) {
-        var tid;
-    }
-
-    return function(){
-        let context = this ;
-        let args = arguments;
-        if (type===1) {
-            let now = new Date();
-            if (now-pre >time) {
-                func.apply(context,args);
-                pre=now
-            }
-        } else if (type===2) {
-            if (!tid) {
-                tid= setTimeout(() => {
-                    tid = null;
-                    func.apply(context,args);
-                }, time);
-            }
-            
-        }
-    }
-}
 
 /**
  * 防抖 多次点击刷新定时器
@@ -195,7 +175,7 @@ function debounce(func,time,immediate){
             };
         } else {
             timer = setTimeout(() => {
-                func.apply(this, args)
+                func.apply(context, args)
               }, time)
         }
 
@@ -207,10 +187,10 @@ function debounce(func,time,immediate){
  * @param {} obj 
  */
 function deepClone(obj){
-    if (typeof obj =="object") {
+    if (typeof obj =="object" && obj !== null) {
         var result = obj.constructor==Array?[]:{};
         for (let key in obj) {
-            result[key] = typeof obj[key] == "object"?deepClone(obj[key]):obj[key];
+            result[key] = (typeof obj[key] == "object" && obj !== null) ? deepClone(obj[key]) : obj[key];
         }
     } else {
         var result = obj
@@ -224,7 +204,39 @@ function deepClone(obj){
  * @param {*} obj 
  */
 function getType(obj){
-    if(obj===null) return String(obj);
+    // if(obj===null) return String(obj);
     return typeof obj === "object"? Object.prototype.toString.call(obj).replace("[object ","").replace("]","").toLowerCase() : typeof obj;
 }
 
+/**
+ * 数组展平一维  reduce和es6 ...
+ * @param {*} arr 
+ */
+function arrayFlattenAllIn(arr){
+    return arr.reduce((pre ,cur)=>{
+        if (Array.isArray(cur)) {
+            return [...pre,...arrayFlatten(cur)];
+        } else {
+            return [...pre,cur]
+        }
+    },[])
+}
+
+function arrayFlattenWithDeep(arr,depth=1){
+    var res =[];
+    for (let i = 0; i < arr.length; i++) {
+        let cur = arr[i];
+        if (depth > 0 && Array.isArray(cur)) {
+            res = res.concat(arrayFlattenWithDeep(cur,depth-1));
+        } else {
+            // 当前项cur不是数组，就直接加到res的后面
+            res.push(cur);
+        }
+        
+    }
+    return res;
+}
+
+var arrTest = [1,2,[3,[4,[5,[6,[7,[8,[9]]]]]]]];
+var arrTest2 = [1,[2,3]];
+console.log(arrayFlattenWithDeep(arrTest,6));

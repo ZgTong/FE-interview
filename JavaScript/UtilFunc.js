@@ -222,6 +222,22 @@ function arrayFlattenAllIn(arr){
     },[])
 }
 
+function* arrayFlattenGenerator(arr){
+    let length = arr.length;
+    for (let i = 0; i < length; i++) {
+        let item = arr[i];
+        if (typeof item !=="number") {
+            yield* arrayFlattenGenerator(item);
+        } else {
+            yield item;
+        }
+    }
+}
+// var arrTest = [1,2,[3,[4,[5,[6,[7,[8,[9]]]]]]]];
+// for (let f of arrayFlattenGenerator(arrTest)) {
+//     console.log(f);
+// }
+
 function arrayFlattenWithDeep(arr,depth=1){
     var res =[];
     for (let i = 0; i < arr.length; i++) {
@@ -240,3 +256,41 @@ function arrayFlattenWithDeep(arr,depth=1){
 var arrTest = [1,2,[3,[4,[5,[6,[7,[8,[9]]]]]]]];
 var arrTest2 = [1,[2,3]];
 console.log(arrayFlattenWithDeep(arrTest,6));
+
+/**
+ * 手写new方法
+ * @param {*} fn 构造函数
+ * @param  {...any} args 
+ */
+function myNew (fn,...args){
+    let obj = Object.create(fn.prototype);
+    let res = fn.call(obj,...args);
+    // return res instanceof Object ? res:obj;
+    if ((res!==null&&typeof res =="object") || typeof res ==="function") {
+        return res;
+    }
+    return obj;
+
+}
+/**
+ * 手写instanceof
+ * @param {*} left 要检测的对象 
+ * @param {*} right 构造函数
+ */
+function myInstanceof(left,right){
+    if (typeof left !=="object"||left ===null) {
+        return false;
+    }
+    let rp = right.prototype;
+    let lp = Object.getPrototypeOf(left);
+    while (true) {
+        //找到了最顶层
+        if (lp===null) {
+            return false;
+        }
+        if (rp===lp) {
+            return true;
+        }
+        lp = Object.getPrototypeOf(lp);
+    }
+}

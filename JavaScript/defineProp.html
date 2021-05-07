@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input id="input"/></br>
+<button id="btn">点我修改值</button>
+<script>
+    let inputNode = document.getElementById('input');
+    let person = {}
+    Object.defineProperty(person, 'name' ,{
+        configurable: true,
+        get: function () {
+            console.log('person.name.get()：'+ inputNode.value)
+            return inputNode.value
+        },
+        set: function (newValue) {
+            console.log('person.name.set()：' + newValue)
+            inputNode.value = newValue
+        }
+    })
+    inputNode.oninput = function () {
+        console.log('inputNode.oninput: ' + inputNode.value)
+        person.name = inputNode.value;
+    }
+
+    let btn = document.getElementById('btn');
+    btn.onclick = function () {
+        person.name = Math.random()
+    }
+</script>
+</body>
+</html>

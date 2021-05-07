@@ -52,7 +52,8 @@ function uniqueArr3(arr) {
 function uniqueArr4(arr) {
     var obj = {}
     return arr.filter((item,index,arr)=>{
-        return obj.hasOwnProperty(typeof item+item)?false:(obj[typeof item+item]=true)
+        console.log(obj.hasOwnProperty(typeof item + item));
+        return obj.hasOwnProperty(typeof item + item) ? false : (obj[typeof item + item] = true);
     });
 }
 //filter
@@ -80,8 +81,5 @@ function uniqueArr6(arr) {
 
 }
 
-function uniqueArr7(ARR) {
-    
-}
-arrnew = uniqueArr6(arr)
+arrnew = uniqueArr4(arr)
 console.log(arrnew)

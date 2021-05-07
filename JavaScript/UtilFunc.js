@@ -88,11 +88,10 @@ var EventUtil = {
 function curry(fn){
     var length = fn.length; //3
     var args =Array.prototype.slice.call(arguments,1)||[];//[]
-    // console.log("curry:"+args)
+    console.log("curry:"+args)
     return function(){
         var innerArgs = Array.prototype.slice.call(arguments);
         var newArgs = args.concat(innerArgs);
-        // console.log("innerArgs:"+newArgs);
         if (newArgs.length<length) {
             return curry.call(this,fn,...newArgs);
         } else {
@@ -109,7 +108,7 @@ function add(num1,num2,num3){
 }
 
 var curriedAdd = curry(add,4);
-console.log(curriedAdd(3,2));
+console.log(curriedAdd(2)(3));
 
 
 /**
@@ -167,7 +166,6 @@ function debounce(func,time,immediate){
         if (immediate) {
             let callNow = !timer;
             timer = setTimeout(() => {
-                //可有可无,重复
                 timer = null;
             }, time);
             if(callNow) {
@@ -188,8 +186,9 @@ function debounce(func,time,immediate){
  */
 function deepClone(obj){
     if (typeof obj =="object" && obj !== null) {
-        var result = obj.constructor==Array?[]:{};
+        var result = obj.constructor == Array ? [] : {};
         for (let key in obj) {
+            //数组是索引，对象是key
             result[key] = (typeof obj[key] == "object" && obj !== null) ? deepClone(obj[key]) : obj[key];
         }
     } else {
@@ -198,15 +197,7 @@ function deepClone(obj){
     return result;
 }
 
-
-/**
- * 数据类型检测
- * @param {*} obj 
- */
-function getType(obj){
-    // if(obj===null) return String(obj);
-    return typeof obj === "object"? Object.prototype.toString.call(obj).replace("[object ","").replace("]","").toLowerCase() : typeof obj;
-}
+console.log("res:" + deepClone([{a:1,b:2},{2:2},[1,3,2]]));
 
 /**
  * 数组展平一维  reduce和es6 ...
@@ -214,6 +205,7 @@ function getType(obj){
  */
 function arrayFlattenAllIn(arr){
     return arr.reduce((pre ,cur)=>{
+        console.log(pre, cur);
         if (Array.isArray(cur)) {
             return [...pre,...arrayFlatten(cur)];
         } else {
@@ -257,21 +249,7 @@ var arrTest = [1,2,[3,[4,[5,[6,[7,[8,[9]]]]]]]];
 var arrTest2 = [1,[2,3]];
 console.log(arrayFlattenWithDeep(arrTest,6));
 
-/**
- * 手写new方法
- * @param {*} fn 构造函数
- * @param  {...any} args 
- */
-function myNew (fn,...args){
-    let obj = Object.create(fn.prototype);
-    let res = fn.call(obj,...args);
-    // return res instanceof Object ? res:obj;
-    if ((res!==null&&typeof res =="object") || typeof res ==="function") {
-        return res;
-    }
-    return obj;
 
-}
 /**
  * 手写instanceof
  * @param {*} left 要检测的对象 
@@ -294,3 +272,65 @@ function myInstanceof(left,right){
         lp = Object.getPrototypeOf(lp);
     }
 }
+
+
+/**
+ * 手写new方法
+ * @param {*} fn 构造函数
+ * @param  {...any} args 
+ */
+function myNew (fn,...args){
+    let obj = Object.create(fn.prototype);
+    let res = fn.call(obj,...args);
+    // return res instanceof Object ? res:obj;
+    return typeof res == "object" ? res || obj : obj
+    // if ((res!==null&&typeof res =="object") || typeof res ==="function") {
+    //     return res;
+    // }
+    // return obj;
+
+}
+
+/**
+ * 数组乱序
+ * @param {*} arr 
+ */
+function shuffle(arr){
+    for (let i = arr.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [arr[i-1], arr[j]] = [arr[j], arr[i-1]];
+    }
+    return arr;
+}
+var arr =[1,2,3,4,5];
+shuffle(arr)
+console.log(arr);
+
+/**
+ * 数据类型检测
+ * @param {*} obj 
+ */
+function getType(obj){
+    // if(obj===null) return String(obj);
+    return typeof obj === "object" ? Object.prototype.toString.call(obj).replace("[object ","").replace("]","").toLowerCase() : typeof obj;
+}
+
+
+/**
+ * 
+ * 千位分隔符
+ * 
+ * */
+function parseNum(num) {
+    let numStr = num + "";
+    let numNewStr = "";
+    for (let i = numStr.length - 1, j = 1; i >= 0 ; i--, j++) {
+        if (j % 3 == 0 && i != 0) {
+            numNewStr += numStr[i] + ",";
+            continue;
+        }
+        numNewStr += numStr[i];
+    }
+    return numNewStr.split("").reverse().join("");
+}
+

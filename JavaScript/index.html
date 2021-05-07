@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">    
 </head>
 <body>
     <div class="throttleTry" style="height:150px;line-height:150px;text-align:center; color: #fff;background-color:#ccc;font-size:80px;"></div>
     <div class="draggable">拖拽</div>
+    <div class="triangle"></div>
+    <article class="layout">
+        <div class="left">左边</div>
+        <div class="mid">中间</div>
+        <div class="right">右边</div>
+        
+    </article>
 </body>
 <script src="./UtilFunc.js"></script>
 <script>
@@ -20,7 +27,7 @@
     function handler() {
         throttleAndDebounce.innerHTML = num++;
     }
-    EventUtil.addHandler(throttleAndDebounce,"mousemove",throttle(handler,1000,2));
+    EventUtil.addHandler(throttleAndDebounce,"mousemove",debounce(handler,1000,false));
     //拖拽
     var draggableDiv = document.querySelector(".draggable");
     var l = 0;
@@ -49,5 +56,8 @@
         flag = false;
         draggableDiv.style.cursor = 'default';
     })
+
+    var arr = [1,2,3,4,5]
+    shuffle(arr)
 </script>
 </html>

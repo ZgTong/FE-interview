@@ -1,9 +1,9 @@
 const p1 = new Promise(function (resolve, reject) {
-    setTimeout(() => reject(new Error('fuck有')), 3000)
+    setTimeout(() => resolve('fuck有'), 10000)
   })
   
 const p2 = new Promise(function (resolve, reject) {
-    setTimeout(() => resolve(p1), 1000)
+    setTimeout(() => resolve("P2 resolve"), 5000)
 })
 
 p2
@@ -92,3 +92,25 @@ Promise.all(tasks).then(()=>{
         console.log(j)
     }, 1000);
 })
+
+var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+　　　　getNameFunc : function(){
+　　　　　　return function(){
+　　　　　　　　return this.name;
+　　　　　　};
+　　　　}
+　　};
+
+console.log(object.getNameFunc()());
+
+const arr = [1,2,3];
+arr.reduce((p,c)=>{
+    return p.then(r=>{
+            return new Promise(r=>{
+                setTimeout(() => r(console.log(c)), 1000);
+            })
+        }
+    )
+},Promise.resolve())

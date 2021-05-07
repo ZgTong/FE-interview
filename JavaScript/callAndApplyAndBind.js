@@ -39,15 +39,18 @@ fuck.apply_myself(obj,["my ","name ","is "]);
 //手动实现bind方法
 
 Function.prototype.bind_myself = function (obj) {
-    if (typeof this !=="function") {
-        throw new Error("what is trying to be bound is not callable");
+    if (typeof this !== "function") {
+        throw new Error("!!!");
     }
-    var fn = this;
-    var args = Array.prototype.slice.call(arguments,1);
-    var bound = function (...newArgs) {
-        fn.apply_myself(this.constructor ===fn?this:obj ,args.concat(...newArgs));
+    let self = this;
+    let args = [...arguments].slice(1);
+    let bound = function () {
+        let newArgs = [...arguments];
+        return self.apply(this instanceof bound ? this : obj, args.concat(newArgs));
     }
-    bound.prototype = fn.prototype;
+    function proFn() {}
+    proFn.prototype = self.prototype;
+    bound.prototype = new proFn();
     return bound;
 }
 let newfuck = fuck.bind_myself(obj,1);

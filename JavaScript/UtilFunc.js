@@ -91,6 +91,7 @@ function curry(fn){
     console.log("curry:"+args)
     return function(){
         var innerArgs = Array.prototype.slice.call(arguments);
+        console.log("inner:"+innerArgs)
         var newArgs = args.concat(innerArgs);
         if (newArgs.length<length) {
             return curry.call(this,fn,...newArgs);
@@ -108,7 +109,7 @@ function add(num1,num2,num3){
 }
 
 var curriedAdd = curry(add,4);
-console.log(curriedAdd(2)(3));
+console.log(curriedAdd(2,3));
 
 
 /**
@@ -297,7 +298,8 @@ function myNew (fn,...args){
  */
 function shuffle(arr){
     for (let i = arr.length; i; i--) {
-        let j = Math.floor(Math.random() * i);
+        // let j = Math.floor(Math.random() * i);
+        let j = (Math.random() * i) >> 0;
         [arr[i-1], arr[j]] = [arr[j], arr[i-1]];
     }
     return arr;

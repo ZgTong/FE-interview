@@ -12,11 +12,12 @@ function shuffleArray(arr){
     }
     return arr
 }
+
 //new 
 function my_new(fn, ...args){    
     let obj = Object.create(fn.prototype);
     let res = fn.call(obj,...args);
-    return typeof res === "object" ? res||obj : obj;
+    return typeof res === "object" ? res || obj : obj;
 }
 
 function Father(name,age){
@@ -61,6 +62,7 @@ function throttle(func,time,type){
             let now = Date.now();
             if (now - pre > time) {
                 func.call(context,...args);
+                pre = now
             }
         } else if (type === 2) {
             if (!tid) {
@@ -72,7 +74,6 @@ function throttle(func,time,type){
         }
     }
 }
-
 // 防抖
 function debounce(func, time, immediate){
     var timer;
@@ -108,17 +109,17 @@ function deepCopy(obj){
 
 // 函数柯里化
 function my_currying(func){
-    let len = func.length;
-    let args = Array.prototype.slice.call(arguments,1)||[];
-    return function () {
-        let innerArgs = Array.prototype.slice.call(arguments);
-        let newArgs = args.concat(innerArgs);
-        if (newArgs.length < len) {
-            return my_currying.call(this,func,...newArgs);
-        } else {
-            return func.apply(this, newArgs);
+        let argLen = func.length
+        let args = Array.prototype.slice.call(arguments,1) || []
+        return function () {
+            let innerArgs = Array.prototype.slice.call(arguments)
+            let newArgs = args.concat(innerArgs)
+            if (newArgs.length<argLen) {
+                return my_currying.call(this,func,...newArgs)
+            } else {
+                return func.apply(this,newArgs)
+            }
         }
-    }
 }
 
 // 数组展平
@@ -212,23 +213,28 @@ Function.prototype.my_newApply =  function (obj,arr) {
 fuck.my_newCall(obj,"我的","名字","是");
 
 Function.prototype.my_newBind = function(obj){
-    if (typeof this !== "function") {
-        throw new Error("!!");
-    }
-    let context = this;
+    if (typeof this !== "function") throw new Error("!!!!!");
+    let self = this;
     let args = [...arguments].slice(1);
-    let bound = function (...innerArgs) {
-        return context.apply(typeof this.constructor === context ? this : obj,args);
+    const bindFn = function () {
+        let wholeArgs = args.concat([...arguments]);
+        return self.apply(this instanceof bindFn ? this : obj,wholeArgs)
     }
-    bound.prototype = context.prototype;
-    return bound;
-
+    function proFn() {}
+    proFn.prototype = self.prototype
+    bindFn.prototype = new proFn();
+    return bindFn
 }
+
 function a(m, n, o) {
+    this.newTest = "test new";
     console.log(this.name + ' ' + m + ' ' + n + ' ' + o);
 }
 
 var b = {
     name: 'kong'
 };
-console.log(a.my_newBind(b, 7, 8)(9));
+var res = a.my_newBind(b, 7, 8)
+console.log("res:",res);
+// var c = new res(10)
+// console.log(c.newTest)

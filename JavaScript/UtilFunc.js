@@ -314,7 +314,8 @@ console.log(arr);
  */
 function getType(obj){
     // if(obj===null) return String(obj);
-    return typeof obj === "object" ? Object.prototype.toString.call(obj).replace("[object ","").replace("]","").toLowerCase() : typeof obj;
+    return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+    // return typeof obj === "object" ? Object.prototype.toString.call(obj).replace("[object ","").replace("]","").toLowerCase() : typeof obj;
 }
 
 

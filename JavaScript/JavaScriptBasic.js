@@ -15,7 +15,7 @@ function red(){console.log("red")};
 function yellow(){console.log("yellow")};
 function green(){console.log("green")};
 var light = function (timer,fn) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject)=>{
         setTimeout(function () {
             fn();
             resolve();

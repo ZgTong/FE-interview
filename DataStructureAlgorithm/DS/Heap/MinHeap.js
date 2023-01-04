@@ -37,25 +37,6 @@ class Minheap {
         return true
     }
 
-    decreaseKey(key, new_val){
-        this.arr[key] = new_val
-        while (key !== 0 && this.arr[key] < this.arr[this.getParent(key)]) {
-            this.swapArrEle(this.arr, key, this.getParent(key))
-            key = this.getParent(key)
-        }
-    }
-
-    increaseKey(key, new_val){
-        this.arr[key] =  new_val
-        this.minHepify(key)
-    }
-
-    changeValueOnAKey(key, new_val){
-        if (this.arr[key] === new_val) return 
-        if (this.arr[key] < new_val) this.increaseKey(key, new_val) 
-        if (this.arr[key] > new_val) this.decreaseKey(key, new_val)  
-    }
-
     minHepify(rootKey){
         let lc = this.getLeftChild(rootKey), rc = this.getRightChild(rootKey), smallest = rootKey
         if(lc < this.currentHeapSize && this.arr[lc] < this.arr[smallest]) smallest = lc
@@ -79,6 +60,25 @@ class Minheap {
         return root
     }
 
+    decreaseKey(key, new_val){
+        this.arr[key] = new_val
+        while (key !== 0 && this.arr[key] < this.arr[this.getParent(key)]) {
+            this.swapArrEle(this.arr, key, this.getParent(key))
+            key = this.getParent(key)
+        }
+    }
+
+    increaseKey(key, new_val){
+        this.arr[key] =  new_val
+        this.minHepify(key)
+    }
+
+    changeValueOnAKey(key, new_val){
+        if (this.arr[key] === new_val) return 
+        if (this.arr[key] < new_val) this.increaseKey(key, new_val) 
+        if (this.arr[key] > new_val) this.decreaseKey(key, new_val)  
+    }
+
     deleteKey(key){
         this.decreaseKey(key, Number.MIN_VALUE)
         this.extractMin()
@@ -93,9 +93,9 @@ h.insertKey(3);
 h.insertKey(4);
 h.extractMin();
 console.log(h.arr.slice(0, h.currentHeapSize));
-h.insertKey(5);
-h.insertKey(6);
-h.extractMin();
-console.log(h.arr.slice(0, h.currentHeapSize));
-h.insertKey(7);
-console.log(h.arr.slice(0, h.currentHeapSize));
+// h.insertKey(5);
+// h.insertKey(6);
+// h.extractMin();
+// console.log(h.arr.slice(0, h.currentHeapSize));
+// h.insertKey(7);
+// console.log(h.arr.slice(0, h.currentHeapSize));

@@ -22,9 +22,10 @@ class Minheap {
     }
 
     getMin(){
-        return arr[0]
+        return this.arr[0]
     }
 
+    // 插入时只做自底向上交换，但不堆化,此时顶部最小
     insertKey(key){
         if (this.currentHeapSize === this.capacity) return false
         let i = this.currentHeapSize
@@ -37,6 +38,7 @@ class Minheap {
         return true
     }
 
+    //找到最小的位置，递归判断是否是根。
     minHepify(rootKey){
         let lc = this.getLeftChild(rootKey), rc = this.getRightChild(rootKey), smallest = rootKey
         if(lc < this.currentHeapSize && this.arr[lc] < this.arr[smallest]) smallest = lc
@@ -47,6 +49,7 @@ class Minheap {
         }
     }
 
+    //顶部就是最小的，然后用最后一个替代顶部，堆化
     extractMin(){
         if(this.currentHeapSize <= 0) return false
         if (this.currentHeapSize == 1) {
@@ -54,7 +57,7 @@ class Minheap {
             return this.arr[0]
         }
         let root = this.arr[0]
-        this.arr[0] = this.arr[this.currentHeapSize - 1]
+        this.arr[0] = this.arr[this.currentHeapSize - 1] //最下面的放上去覆盖提取出来的
         this.currentHeapSize--
         this.minHepify(0)
         return root

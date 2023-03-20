@@ -7,12 +7,12 @@ function bubbleSort(arr) {
     let len = arr.length;
     for (let i = len-1; i > 0; i--) {        
         for (let j = 0; j < i; j++) {
-            if (arr[j] > arr[j+1]) arr.splice(j,1,...arr.splice(j+1,1,arr[j]))
+            if (arr[j] < arr[j+1]) swap(arr, j, j+1)
         }
     }
     return arr
 }
-// console.log(`bubbleSort:`, bubbleSort(arrtest))
+console.log(`bubbleSort:`, bubbleSort(arrtest))
 
 // 直接插入排序
 function insertionSort(arr) {
@@ -66,7 +66,7 @@ function partition(arr,left,right) {
     }
     return i
 }
-function quickSort(arr,left=0,right=arr.length-1) {
+function quickSort(arr, left = 0, right = arr.length-1) {
     if (arr.length > 1) {
         const baseIdx = partition(arr,left,right)
         if (left < baseIdx-1) {
@@ -123,4 +123,4 @@ function shellSort(arr) {
     }
     return arr
 }
-console.log(`shellSort:`, shellSort(arrtest))
+// console.log(`shellSort:`, shellSort(arrtest))

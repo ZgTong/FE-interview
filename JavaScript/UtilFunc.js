@@ -231,7 +231,7 @@ function* arrayFlattenGenerator(arr){
 //     console.log(f);
 // }
 
-function arrayFlattenWithDeep(arr,depth=1){
+function arrayFlattenWithDeep(arr,depth = 1){
     var res =[];
     for (let i = 0; i < arr.length; i++) {
         let cur = arr[i];
@@ -246,9 +246,16 @@ function arrayFlattenWithDeep(arr,depth=1){
     return res;
 }
 
+function arrayFlattenWithDeep1(arr, depth = 1, initVal = []){
+    return arr.reduce((pre, cur) => {
+        if(Array.isArray(cur) && depth >= 1) return arrayFlattenWithDeep1(cur, depth - 1, pre);
+        else return [...pre, cur];
+    }, initVal);
+}
+
 var arrTest = [1,2,[3,[4,[5,[6,[7,[8,[9]]]]]]]];
 var arrTest2 = [1,[2,3]];
-console.log(arrayFlattenWithDeep(arrTest,6));
+// console.log("11:", arrayFlattenWithDeep1(arrTest));
 
 
 /**

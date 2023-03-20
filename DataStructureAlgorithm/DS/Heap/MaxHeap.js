@@ -22,7 +22,7 @@ class Maxheap {
     }
 
     getMin(){
-        return arr[0]
+        return this.arr[0]
     }
 
     insertKey(key){

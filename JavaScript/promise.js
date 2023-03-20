@@ -4,42 +4,57 @@ const REJECTED = Symbol();
 class MyPromise{
     constructor(executor){
         this.state = PENDING;
-        this.value = undefined;
-        this.reason = undefined;
+        this.result = undefined;
         this.onResolvedCallbacks = [];
         this.onRejectedCallbacks = [];
         let resolve = (value)=>{
             if (this.state == PENDING) {
                 this.state = FULFILLED;
-                this.value = value;
-                this.onResolvedCallbacks.forEach(fn => fn(this.value));
+                this.result = value;
+                while(this.onResolvedCallbacks.length) this.onResolvedCallbacks.shift()(this.result);
             }
         };
         let reject = (reason)=>{
-            if (this.state == PENDING) {
+            if (this.state == PENDING) { // if判断状态不可变
                 this.state = REJECTED;
-                this.reason = reason;
-                this.onRejectedCallbacks.forEach(fn=>fn(this.reason));
+                this.result = reason;
+                while(this.onRejectedCallbacks.length) this.onRejectedCallbacks.shift()(this.result);
             }
         };
+        resolve.bind(this);
+        reject.bind(this);
         try {
             executor(resolve,reject);
-        } catch (error) {
+        } catch (error) { // 处理throw，等同reject
             reject(error);
         }        
     };
 
     then(onFulfilled, onRejected){
-        if (this.state === FULFILLED) {
-            onFulfilled(this.value);
-        }
-        if (this.state === REJECTED) {
-            onRejected(this.reason);
-        }
-        if (this.state === PENDING) {
-            this.onRejectedCallbacks.push(onRejected);
-            this.onResolvedCallbacks.push(onFulfilled);
-        }
+        //思路：基础版本，根据state决定执行onFulfilled， onRejected
+        //      考虑延时，定时器，在pending状态下存入数组
+        //      链式调用
+        //      微任务
+        let thenPromise = new MyPromise((resolve, reject) => {
+            const resolvePromise = callback => {
+                try {
+                    const x = callback(this.result); //执行onFulfilled onRejected的结果
+                    if(x === thenPromise) throw new Error("Cannot return itself.");
+                    else if(x instanceof MyPromise) x.then(resolve, reject); // 是promise，递归至不是promise
+                    else resolve(x); // 不是promise直接成功
+                } catch (error) {
+                    reject(error);
+                    throw new Error(error);
+                }
+            };
+            if (this.state === FULFILLED) resolvePromise(onFulfilled);
+            if (this.state === REJECTED) resolvePromise(onRejected);
+            if (this.state === PENDING) {
+                this.onRejectedCallbacks.push(resolvePromise.bind(this, onRejected));
+                this.onResolvedCallbacks.push(resolvePromise.bind(this, onFulfilled));
+            }
+        });
+        return thenPromise;
     }
 }
 const isPromise = (value)=>{
@@ -52,16 +67,14 @@ const isPromise = (value)=>{
     }
 }
 
-MyPromise.all = (list)=>{
+MyPromise.all = (list) => {
     return new Promise((resolve, reject)=>{
         let resArr = [];
         let index = 0;
         function processData(i,data){
             resArr[i] = data;
             index += 1;
-            if (index == list.length) {
-                resolve(resArr);
-            }
+            if (index == list.length) resolve(resArr);
         }
         for (let i = 0; i < list.length; i++) {
             if (isPromise(list[i])) {
@@ -79,15 +92,17 @@ MyPromise.all = (list)=>{
     })
 }
 
-const p = new MyPromise((resolve,reject)=>{
+const p = new MyPromise((resolve, reject)=>{
     setTimeout(() => {
-        // resolve('success');
-        reject('failed');
+        resolve('success');
+        // reject('failed');
     }, 3000);
     
 })
-p.then(res=>{
-    console.log(res+":resolve");
-},err=>{
-    console.log(err+":rejected");
-})
+
+p.then(
+    res => {
+        return res+":resolve first"
+    },
+    err => err+":rejected"
+).then(res => console.log(res + ":resolve second"));

@@ -12,7 +12,7 @@ class EventEmitter {
     }
     emit(type,...args){
         if(this.events[type]){
-            this.events.forEach(listener => {
+            this.events[type].forEach(listener => {
                 listener.call(this,...args);
             });
         }
@@ -25,7 +25,7 @@ class EventEmitter {
             })
         }
     }
-    once(){
+    once(type, cb){
         function wrap() {
             cb(...arguments);
             this.off(type, wrap);
@@ -36,12 +36,15 @@ class EventEmitter {
         this.on(type, wrap);
     }
 }
-
-pubSub.subscribe('name', name => {
+const pubSub = new EventEmitter();
+pubSub.on('name', name => {
     console.log(`your name is ${name}`);
 })
-pubSub.subscribe('gender', gender => {
+pubSub.on('name', name => {
+    console.log(`She's name is ${name}`);
+})
+pubSub.on('gender', gender => {
     console.log(`your name is ${gender}`);
 })
-pubSub.publish('name', 'leaf333'); 
-pubSub.publish('gender', '18'); 
+pubSub.emit('name', 'leaf333'); 
+pubSub.emit('gender', '18'); 

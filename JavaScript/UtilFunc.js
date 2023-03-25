@@ -87,8 +87,8 @@ var EventUtil = {
  */
 function curry(fn){
     var length = fn.length; //3
-    var args =Array.prototype.slice.call(arguments,1)||[];//[]
-    console.log("curry:"+args)
+    var args =Array.prototype.slice.call(arguments,1) || [];//[]
+    console.log("curry:", length, args)
     return function(){
         var innerArgs = Array.prototype.slice.call(arguments);
         console.log("inner:"+innerArgs)
@@ -118,12 +118,9 @@ console.log(curriedAdd(2,3));
  * @time 定时器时间
  */
 function throttle(func,time,type){
-    if (type===1) {
-        var pre = 0;
-    }else if (type===2) {
-        var tid;
-    }
-    return function(){
+    if (type===1) var pre = 0;
+    else if (type===2) var tid;
+    return function() {
         let context = this;
         let args = arguments;
         console.log(args);
@@ -140,7 +137,7 @@ function throttle(func,time,type){
                     ()=>{
                         tid = null;
                         func.apply(context,args);
-                    },time
+                    }, time
                 )
             }
         }
@@ -160,10 +157,7 @@ function debounce(func,time,immediate){
     return function(){
         let context = this;
         let args = arguments;
-        if(timer){
-            clearTimeout(timer);
-        }
-
+        if(timer) clearTimeout(timer);
         if (immediate) {
             let callNow = !timer;
             timer = setTimeout(() => {
@@ -307,6 +301,7 @@ function shuffle(arr){
     for (let i = arr.length; i; i--) {
         // let j = Math.floor(Math.random() * i);
         let j = (Math.random() * i) >> 0;
+        console.log(j)
         [arr[i-1], arr[j]] = [arr[j], arr[i-1]];
     }
     return arr;

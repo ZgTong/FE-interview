@@ -21,6 +21,7 @@ class Minheap {
         return 2*key + 2
     }
 
+    // 直接return arr[0]
     getMin(){
         return this.arr[0]
     }

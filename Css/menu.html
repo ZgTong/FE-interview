@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        nav {
+            width: 100%;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li{
+            margin-right: 1rem;
+        }
+        .tab{
+            background: white;
+            color: black;
+            transition: all .3s ease;
+        }
+        .tab:hover{
+            background-color:brown;
+            color: black;
+            transition: all .3s ease;
+        }
+        .active {
+            background: #000;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#" class="tab active">tab1</a></li>
+            <li><a href="#" class="tab">tab2</a></li>
+            <li><a href="#" class="tab">tab3</a></li>
+            <li><a href="#" class="tab">tab4</a></li>
+        </ul>
+    </nav>
+</body>
+<script>
+    function handleClick(e) {
+        e.preventDefault();
+        const links = document.querySelectorAll(".tab");
+        for (const link of links) {
+            link.classList.remove("active");
+        }
+        e.target.classList.add("active");
+    }
+    const links = document.querySelectorAll(".tab");
+    for (const link of links) {
+        link.addEventListener("click", handleClick);
+    }
+</script>
+</html>

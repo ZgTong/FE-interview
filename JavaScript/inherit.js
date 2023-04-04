@@ -10,7 +10,7 @@ function Per() {
     this.name = "tzg";    
 }
 
-/**
+/** 
  * 原型继承 Prototypal Inheritence
  * 缺点：
  * 单一继承，

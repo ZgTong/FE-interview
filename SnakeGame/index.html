@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake Game</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" type="text/javascript"></script>
+</head>
+<body>
+    <header>
+        <article id="head_left">Snake</article>
+        <article id="head_right">Score: <span id="score">0</span></article>
+    </header>
+    <section id="board"></section>
+    <footer>
+        <buttom class="buttons" onclick="snakeGame.start();">Start</buttom>
+        <buttom class="buttons" onclick="snakeGame.pause();">Pause</buttom>
+        <buttom class="buttons" onclick="snakeGame.reset();">Reset</buttom>
+    </footer>
+</body>
+</html>

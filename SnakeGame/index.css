@@ -1,0 +1,42 @@
+body {
+    width: 1000px;
+    margin: 0 auto;
+}
+header {
+    height: 30px;
+    line-height: 30px;
+    margin: 30px auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: #000;
+    color: #fff;
+    padding: 0 30px;
+}
+#head_left, #head_right {
+    font-style: italic; 
+    letter-spacing: 5px;
+}
+#score {
+    color: yellow;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#board {
+    height: 500px;
+    background-color: #000;
+    margin: 0 auto;
+    position: relative;
+}
+
+footer {
+    text-align: center;
+}
+
+footer .buttons{
+    width: 150px;
+    height: 30px;
+    background-color: #000;
+    color: yellow;
+    margin: 10px;
+}

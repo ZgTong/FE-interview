@@ -1,0 +1,53 @@
+/*整体：居中*/
+body {width: 1000px; margin: 0 auto;}
+
+/*计分板：调整行高、外边距*/
+header { 
+    height: 30px; background-color: black; color: white;
+    line-height: 30px; margin: 10px auto;
+}
+
+/*游戏标题：调整左边距、忽略内边距和边框、左漂浮、文字倾斜、字间距*/
+#head_left { 
+    width: 700px; padding-left: 20px; box-sizing: border-box; 
+    float: left; font-style: italic; letter-spacing: 10px;
+}
+
+/*计分提示：调整右内边距、忽略内边距和边框、右浮动、文字居右*/
+#head_right { 
+    width: 300px; padding-right: 20px; box-sizing: border-box; 
+    float: right; text-align: right;
+}
+
+/*分数数字：文字加粗，下划线*/
+#score { 
+    color: yellow; font-weight: bold; text-decoration: underline;
+}
+
+/*游戏面板：居中、父元素设置成相对点*/
+#board { 
+    height: 500px; background-color: black;
+    margin: 0 auto; position: relative;
+}
+
+/*豆子：显示为区块、圆角、z轴、绝对定位*/
+#board span { 
+    width: 20px; height: 20px; background-color: yellow;
+    display: block; border-radius: 50%; 
+    z-index: 0; position: absolute; 
+}
+
+/*蛇：圆角、绝对定位、z轴*/
+#board div { 
+    width: 20px; height: 20px; background-color: skyblue; 
+    border-radius: 50%; position: absolute; z-index: 1; 
+}
+
+/*功能按钮区：内容居中*/
+footer { text-align: center; }
+
+/*功能按钮：文字颜色、外边距*/
+footer .buttons{ 
+    width: 150px; height: 30px;background-color: black;
+    color: yellow; margin: 10px; 
+}
